@@ -9,7 +9,7 @@ export interface ChatMessage {
   timestamp: Date;
 }
 
-const WEBHOOK_URL = ""; // User must set this
+const WEBHOOK_URL = "https://engrrrrrr.app.n8n.cloud/webhook/lovable-chat";
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([
