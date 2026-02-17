@@ -91,7 +91,7 @@ const TaxAssistant = () => {
               </div>
               <h2 className="text-2xl font-bold text-foreground mb-2">How can I help with your taxes?</h2>
               <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
-                Ask any tax-related question — I'll research it through our verified knowledge base and provide accurate, sourced answers.
+                I don't generate answers on my own. Every response is retrieved exclusively from our research workflow — no assumptions, no guesses.
               </p>
               {/* Quick prompts */}
               <div className="flex flex-wrap justify-center gap-2">
@@ -165,7 +165,7 @@ const TaxAssistant = () => {
             </button>
           </div>
           <p className="text-[10px] text-muted-foreground/50 text-center mt-2">
-            All responses are sourced from verified tax databases — no AI-generated assumptions
+            All responses are retrieved exclusively from verified research workflows — no AI-generated or assumed answers
           </p>
         </div>
       </div>
