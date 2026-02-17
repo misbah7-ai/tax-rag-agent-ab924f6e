@@ -9,7 +9,7 @@ export interface ChatMessage {
   timestamp: Date;
 }
 
-const WEBHOOK_URL = "https://engrrrrrr.app.n8n.cloud/webhook/lovable-chat";
+const WEBHOOK_URL = "https://ragrag.app.n8n.cloud/webhook/lovable-chat";
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([
