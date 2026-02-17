@@ -16,7 +16,7 @@ export function useChat() {
     {
       id: "welcome",
       role: "assistant",
-      text: "Hello! I'm your AI Tax Assistant. Ask me any tax-related question — I'll research it for you through our knowledge base. How can I help you today?",
+      text: "Hello! I'm your AI Tax Assistant. I do not generate answers on my own — every response is sourced exclusively from our verified research workflow. Ask me any tax-related question and I'll retrieve the relevant information for you.",
       timestamp: new Date(),
     },
   ]);
@@ -60,7 +60,7 @@ export function useChat() {
           data.text ||
           data.message ||
           data.response ||
-          "I apologize, but I was unable to retrieve an answer for your query at this time. Please try rephrasing your question or contact a tax professional for assistance.",
+          "Our research workflow did not return a result for this query. This means the information was not found in our verified knowledge base. Please rephrase your question or consult a tax professional for further assistance.",
         speechUrl: data.speech || data.audio || undefined,
         references: data.references || data.sources || undefined,
         timestamp: new Date(),
@@ -83,7 +83,7 @@ export function useChat() {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        text: "I'm sorry, I'm currently unable to process your request. This could be due to a connectivity issue or the service being temporarily unavailable. Please try again shortly.",
+        text: "Unable to reach the research workflow at this time. No answer can be provided without a verified source. Please check your connection and try again.",
         timestamp: new Date(),
       };
 
