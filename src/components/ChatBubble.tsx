@@ -40,7 +40,7 @@ const ChatBubble = ({ message }: Props) => {
   };
 
   return (
-    <div className={`flex items-start gap-3 animate-float-in ${isUser ? "flex-row-reverse" : ""}`}>
+    <div className={`flex items-start gap-2.5 animate-float-in ${isUser ? "flex-row-reverse" : ""}`}>
       {/* Avatar */}
       <div
         className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-1 ${
