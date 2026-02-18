@@ -12,6 +12,12 @@ export interface ChatMessage {
 const WEBHOOK_URL = "https://taxragagentt.app.n8n.cloud/webhook/lovable-chat";
 
 export function useChat() {
+  const sessionId = useRef(sessionStorage.getItem("tax_session_id") || (() => {
+    const id = crypto.randomUUID();
+    sessionStorage.setItem("tax_session_id", id);
+    return id;
+  })());
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
@@ -43,7 +49,11 @@ export function useChat() {
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text.trim() }),
+        body: JSON.stringify({
+          query: text.trim(),
+          session_id: sessionId.current,
+          user_id: "anonymous",
+        }),
         signal: abortRef.current.signal,
       });
 
