@@ -16,7 +16,7 @@ export function useChat() {
     {
       id: "welcome",
       role: "assistant",
-      text: "Welcome to the Tax RAG Agent. Your AI-powered assistant for federal tax guidance, explanations, and insights. Ask your tax question below and our system will provide formal, concise, and reliable responses with options to copy, download, or save your answer for future reference.",
+      text: "Welcome to the Tax RAG Agent. Your AI-powered assistant for federal tax guidance, explanations, and insights. Ask your tax question and our system will provide formal, concise, and reliable responses sourced from verified research workflows, with options to copy, download, or save for future reference.",
       timestamp: new Date(),
     },
   ]);
