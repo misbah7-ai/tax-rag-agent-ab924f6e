@@ -1,5 +1,7 @@
 import { ChatMessage } from "@/hooks/useChat";
-import { Volume2, FileText, ExternalLink, Bot, User } from "lucide-react";
+import { Copy, Download, Check, FileText, ExternalLink, Bot, User } from "lucide-react";
+import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 interface Props {
   message: ChatMessage;
@@ -7,19 +9,41 @@ interface Props {
 
 const ChatBubble = ({ message }: Props) => {
   const isUser = message.role === "user";
+  const [copied, setCopied] = useState(false);
 
-  const playSpeech = () => {
-    if (message.speechUrl) {
-      const audio = new Audio(message.speechUrl);
-      audio.play();
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(message.text);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // fallback
+      const textarea = document.createElement("textarea");
+      textarea.value = message.text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
+  const handleExport = () => {
+    const blob = new Blob([message.text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `tax-response-${new Date().toISOString().slice(0, 10)}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
-    <div className={`flex items-end gap-3 animate-float-in ${isUser ? "flex-row-reverse" : ""}`}>
+    <div className={`flex items-start gap-3 animate-float-in ${isUser ? "flex-row-reverse" : ""}`}>
       {/* Avatar */}
       <div
-        className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-sm ${
+        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-1 ${
           isUser
             ? "bg-primary text-primary-foreground"
             : "bg-gradient-to-br from-accent to-[hsl(var(--gold-glow))] text-accent-foreground"
@@ -28,7 +52,7 @@ const ChatBubble = ({ message }: Props) => {
         {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
       </div>
 
-      <div className={`max-w-[78%] space-y-1.5 flex flex-col ${isUser ? "items-end" : "items-start"}`}>
+      <div className={`max-w-[80%] space-y-1 flex flex-col ${isUser ? "items-end" : "items-start"}`}>
         {/* Label */}
         <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
           {isUser ? "You" : "Tax Assistant"}
@@ -36,24 +60,41 @@ const ChatBubble = ({ message }: Props) => {
 
         {/* Bubble */}
         <div
-          className={`px-4 py-3 text-[14.5px] leading-relaxed ${
+          className={`px-4 py-3 text-[14px] leading-relaxed ${
             isUser
-              ? "bg-primary text-primary-foreground rounded-2xl rounded-br-lg shadow-md"
-              : "bg-card text-card-foreground rounded-2xl rounded-bl-lg shadow-sm border border-border/50"
+              ? "bg-primary text-primary-foreground rounded-2xl rounded-br-md"
+              : "bg-card text-card-foreground rounded-2xl rounded-bl-md border border-border/60"
           }`}
         >
-          <p className="whitespace-pre-wrap">{message.text}</p>
+          {isUser ? (
+            <p className="whitespace-pre-wrap">{message.text}</p>
+          ) : (
+            <div className="prose prose-sm max-w-none prose-headings:text-card-foreground prose-p:text-card-foreground prose-strong:text-card-foreground prose-li:text-card-foreground prose-ul:my-1 prose-ol:my-1 prose-p:my-1.5 prose-headings:my-2">
+              <ReactMarkdown>{message.text}</ReactMarkdown>
+            </div>
+          )}
         </div>
 
-        {/* Speech button */}
-        {message.speechUrl && (
-          <button
-            onClick={playSpeech}
-            className="flex items-center gap-1.5 text-[11px] font-medium text-accent hover:text-accent/80 transition-colors px-1"
-          >
-            <Volume2 className="w-3.5 h-3.5" />
-            Play audio
-          </button>
+        {/* Action buttons for assistant messages */}
+        {!isUser && (
+          <div className="flex items-center gap-1 px-1">
+            <button
+              onClick={handleCopy}
+              className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+              title="Copy response"
+            >
+              {copied ? <Check className="w-3.5 h-3.5 text-accent" /> : <Copy className="w-3.5 h-3.5" />}
+              {copied ? "Copied" : "Copy"}
+            </button>
+            <button
+              onClick={handleExport}
+              className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+              title="Download response"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Save
+            </button>
+          </div>
         )}
 
         {/* References */}
@@ -61,7 +102,7 @@ const ChatBubble = ({ message }: Props) => {
           <div className="bg-[hsl(var(--blue-soft))] rounded-xl p-3 space-y-1.5 w-full border border-[hsl(var(--blue-accent)/0.15)]">
             <p className="text-[11px] font-bold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
               <FileText className="w-3.5 h-3.5" />
-              References
+              Sources
             </p>
             {message.references.map((ref, i) => (
               <div key={i} className="text-xs text-foreground">
@@ -84,7 +125,7 @@ const ChatBubble = ({ message }: Props) => {
         )}
 
         {/* Timestamp */}
-        <span className="text-[10px] text-muted-foreground/60 px-1">
+        <span className="text-[10px] text-muted-foreground/50 px-1">
           {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </span>
       </div>

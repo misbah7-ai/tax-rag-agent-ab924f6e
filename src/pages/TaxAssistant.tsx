@@ -1,37 +1,41 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Mic, MicOff, Sparkles, Shield, MessageSquare } from "lucide-react";
+import { Send, Sparkles, Shield, ArrowUp } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
-import { useSpeechToText } from "@/hooks/useSpeechToText";
 import ChatBubble from "@/components/ChatBubble";
 import TypingIndicator from "@/components/TypingIndicator";
 
 const QUICK_PROMPTS = [
   "What deductions can I claim?",
   "How do I file a tax return?",
-  "What are the latest tax brackets?",
+  "Explain the latest tax brackets",
+  "Capital gains tax rules",
 ];
 
 const TaxAssistant = () => {
   const [input, setInput] = useState("");
   const { messages, isLoading, sendMessage } = useChat();
-  const { isListening, transcript, startListening, stopListening, clearTranscript } = useSpeechToText();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
 
+  // Auto-resize textarea
   useEffect(() => {
-    if (transcript) setInput(transcript);
-  }, [transcript]);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 150) + "px";
+    }
+  }, [input]);
 
   const handleSend = () => {
     if (!input.trim() || isLoading) return;
     sendMessage(input);
     setInput("");
-    clearTranscript();
-    inputRef.current?.focus();
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -39,11 +43,6 @@ const TaxAssistant = () => {
       e.preventDefault();
       handleSend();
     }
-  };
-
-  const toggleMic = () => {
-    if (isListening) stopListening();
-    else startListening();
   };
 
   const handleQuickPrompt = (prompt: string) => {
@@ -56,50 +55,42 @@ const TaxAssistant = () => {
   return (
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
-      <header className="shrink-0 border-b bg-card/80 glass sticky top-0 z-10">
+      <header className="shrink-0 border-b border-border/60 bg-card/90 glass sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg">
-                <Sparkles className="w-5 h-5 text-accent" />
-              </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-accent border-2 border-card" />
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <Sparkles className="w-4.5 h-4.5 text-accent" />
             </div>
             <div>
-              <h1 className="text-base font-bold tracking-tight text-foreground">Your AI Tax Assistant</h1>
+              <h1 className="text-[15px] font-bold tracking-tight text-foreground">Tax RAG Assistant</h1>
               <div className="flex items-center gap-1.5">
                 <Shield className="w-3 h-3 text-accent" />
-                <span className="text-[11px] text-muted-foreground font-medium">Verified research only</span>
+                <span className="text-[10px] text-muted-foreground font-medium">Verified sources only</span>
               </div>
             </div>
-          </div>
-          <div className="flex items-center gap-1.5 text-muted-foreground">
-            <MessageSquare className="w-4 h-4" />
-            <span className="text-xs font-medium">{messages.length - 1} messages</span>
           </div>
         </div>
       </header>
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto chat-scroll">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-6">
-          {/* Welcome Hero */}
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+          {/* Welcome */}
           {showWelcome && (
-            <div className="text-center py-8 animate-float-in">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-5 shadow-xl animate-pulse-ring">
-                <Sparkles className="w-8 h-8 text-accent" />
+            <div className="text-center py-10 animate-float-in">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-5 shadow-lg">
+                <Sparkles className="w-7 h-7 text-accent" />
               </div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">How can I help with your taxes?</h2>
-              <p className="text-sm text-muted-foreground max-w-md mx-auto mb-6">
-                I don't generate answers on my own. Every response is retrieved exclusively from our research workflow — no assumptions, no guesses.
+              <h2 className="text-xl font-bold text-foreground mb-2">How can I help with your taxes?</h2>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">
+                Every response is retrieved from verified research — no assumptions, no AI-generated guesses.
               </p>
-              {/* Quick prompts */}
-              <div className="flex flex-wrap justify-center gap-2">
+              <div className="grid grid-cols-2 gap-2 max-w-lg mx-auto">
                 {QUICK_PROMPTS.map((prompt) => (
                   <button
                     key={prompt}
                     onClick={() => handleQuickPrompt(prompt)}
-                    className="px-4 py-2.5 text-sm font-medium rounded-xl border border-border bg-card text-foreground hover:border-accent hover:shadow-md transition-all duration-200"
+                    className="px-4 py-3 text-[13px] font-medium rounded-xl border border-border bg-card text-foreground hover:border-accent/50 hover:bg-muted/50 transition-all duration-200 text-left"
                   >
                     {prompt}
                   </button>
@@ -118,54 +109,30 @@ const TaxAssistant = () => {
       </div>
 
       {/* Input Area */}
-      <div className="shrink-0 border-t bg-card/80 glass">
+      <div className="shrink-0 border-t border-border/60 bg-card/90 glass">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3">
-          {isListening && (
-            <div className="flex items-center gap-2 mb-2 px-1">
-              <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-              <span className="text-xs font-semibold text-destructive">Recording — speak now...</span>
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            {/* Mic */}
-            <button
-              onClick={toggleMic}
-              className={`p-2.5 rounded-xl transition-all duration-200 shrink-0 ${
-                isListening
-                  ? "bg-destructive text-destructive-foreground animate-mic-pulse"
-                  : "bg-secondary text-secondary-foreground hover:bg-accent hover:text-accent-foreground"
-              }`}
-              title={isListening ? "Stop recording" : "Voice input"}
-            >
-              {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
-            </button>
-
-            {/* Input */}
-            <div className="flex-1 relative">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder={isListening ? "Listening..." : "Ask a tax question..."}
-                className="w-full px-4 py-3 rounded-xl border bg-background text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent placeholder:text-muted-foreground/60 transition-all"
-                disabled={isLoading}
-              />
-            </div>
-
-            {/* Send */}
+          <div className="relative flex items-end gap-2 bg-background border border-border rounded-xl px-4 py-2 focus-within:ring-2 focus-within:ring-accent/40 focus-within:border-accent/50 transition-all">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ask a tax question..."
+              rows={1}
+              className="flex-1 bg-transparent text-foreground text-sm font-medium resize-none focus:outline-none placeholder:text-muted-foreground/50 py-1.5 max-h-[150px]"
+              disabled={isLoading}
+            />
             <button
               onClick={handleSend}
               disabled={!input.trim() || isLoading}
-              className="p-2.5 rounded-xl bg-primary text-primary-foreground hover:shadow-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:shadow-none shrink-0"
+              className="shrink-0 w-8 h-8 rounded-lg bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-all disabled:opacity-20 disabled:cursor-not-allowed mb-0.5"
               title="Send"
             >
-              <Send className="w-5 h-5" />
+              <ArrowUp className="w-4 h-4" />
             </button>
           </div>
-          <p className="text-[10px] text-muted-foreground/50 text-center mt-2">
-            All responses are retrieved exclusively from verified research workflows — no AI-generated or assumed answers
+          <p className="text-[10px] text-muted-foreground/40 text-center mt-2">
+            Responses sourced exclusively from verified research workflows
           </p>
         </div>
       </div>
