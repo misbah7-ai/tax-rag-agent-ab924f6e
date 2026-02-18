@@ -68,9 +68,9 @@ const TaxAssistant = () => {
               <span className="text-[11px] opacity-80 font-medium">Federal Board of Revenue - AI Tax Guidance</span>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 text-[11px] opacity-70">
-            <Shield className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Verified Sources</span>
+          <div className="flex items-center gap-2 text-[11px] text-primary-foreground/90 font-medium">
+            <Shield className="w-4 h-4" />
+            <span>Verified Sources Only</span>
           </div>
         </div>
         {/* Accent bar */}
