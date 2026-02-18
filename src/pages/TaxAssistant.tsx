@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowUp, Shield, ChevronRight } from "lucide-react";
+import { ArrowUp, BadgeCheck, ChevronRight } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
 import fbrLogo from "@/assets/fbr-logo.jfif";
 import ChatBubble from "@/components/ChatBubble";
@@ -82,7 +82,7 @@ const TaxAssistant = () => {
 
   const [activeCategory, setActiveCategory] = useState(0);
 
-  const showWelcome = messages.length <= 1;
+  const hasMessages = messages.length > 1;
 
   return (
     <div className="flex flex-col h-screen bg-background">
@@ -100,8 +100,8 @@ const TaxAssistant = () => {
               <span className="text-[11px] opacity-80 font-medium">Federal Board of Revenue - AI Tax Guidance</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 text-[11px] text-primary-foreground/90 font-medium">
-            <Shield className="w-4 h-4" />
+          <div className="flex items-center gap-2 text-[11px] text-primary-foreground font-medium">
+            <BadgeCheck className="w-5 h-5" />
             <span>Verified Sources Only</span>
           </div>
         </div>
@@ -112,7 +112,7 @@ const TaxAssistant = () => {
       <div className="flex-1 overflow-y-auto chat-scroll">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 space-y-3">
           {/* Welcome */}
-          {showWelcome && (
+          {!hasMessages && (
             <div className="animate-float-in">
               <div className="bg-card border border-border rounded-lg p-5 mb-4">
                 <div className="flex items-center gap-3 mb-3">
@@ -126,39 +126,39 @@ const TaxAssistant = () => {
                   Your AI-powered assistant for federal tax guidance, explanations, and insights. Ask your tax question below and our system will provide formal, concise, and reliable responses.
                 </p>
               </div>
-
-              {/* Category Tabs */}
-              <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
-                {PROMPT_CATEGORIES.map((cat, idx) => (
-                  <button
-                    key={cat.label}
-                    onClick={() => setActiveCategory(idx)}
-                    className={`px-3 py-1.5 text-[12px] font-semibold rounded-md border whitespace-nowrap transition-colors ${
-                      activeCategory === idx
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
-                    }`}
-                  >
-                    {cat.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Prompt Buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {PROMPT_CATEGORIES[activeCategory].prompts.map((prompt) => (
-                  <button
-                    key={prompt}
-                    onClick={() => handleQuickPrompt(prompt)}
-                    className="group flex items-center gap-2 px-3 py-2.5 text-[13px] font-medium rounded-lg border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors text-left"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5 text-primary shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
-                    <span>{prompt}</span>
-                  </button>
-                ))}
-              </div>
             </div>
           )}
+
+          {/* Category Tabs & Quick Prompts - Always visible */}
+          <div className={hasMessages ? "" : "animate-float-in"}>
+            <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
+              {PROMPT_CATEGORIES.map((cat, idx) => (
+                <button
+                  key={cat.label}
+                  onClick={() => setActiveCategory(idx)}
+                  className={`px-3 py-1.5 text-[12px] font-semibold rounded-md border whitespace-nowrap transition-colors ${
+                    activeCategory === idx
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {PROMPT_CATEGORIES[activeCategory].prompts.map((prompt) => (
+                <button
+                  key={prompt}
+                  onClick={() => handleQuickPrompt(prompt)}
+                  className="group flex items-center gap-2 px-3 py-2.5 text-[13px] font-medium rounded-lg border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors text-left"
+                >
+                  <ChevronRight className="w-3.5 h-3.5 text-primary shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+                  <span>{prompt}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           {/* Messages */}
           {messages.map((msg) => (
@@ -193,16 +193,17 @@ const TaxAssistant = () => {
             </button>
           </div>
           <p className="text-[10px] text-muted-foreground/50 text-center mt-1.5">
-            Responses sourced exclusively from verified research workflows
+            Responses sourced exclusively from verified research resources
           </p>
         </div>
       </div>
 
       {/* Footer */}
       <footer className="shrink-0 border-t border-border bg-muted/50 py-2">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex items-center justify-between text-[10px] text-muted-foreground">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between text-[10px] text-muted-foreground gap-1">
           <span>Federal Board of Revenue - Tax RAG Agent</span>
-          <span>Powered by AI Research Workflows</span>
+          <span>Designed & Developed by MISBAH RIAZ</span>
+          <span>Powered by AI Research · All Rights Reserved</span>
         </div>
       </footer>
     </div>
