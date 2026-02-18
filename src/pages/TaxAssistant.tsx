@@ -57,12 +57,12 @@ const TaxAssistant = () => {
     <div className="flex flex-col h-screen bg-background">
       {/* Header */}
       <header className="shrink-0 border-b border-border/60 bg-card/90 glass sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src={fbrLogo} alt="FBR Logo" className="w-9 h-9 rounded-lg object-cover" />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <img src={fbrLogo} alt="FBR Logo" className="w-12 h-12 rounded-xl object-cover shadow-md border border-border/40" />
             <div>
-              <h1 className="text-[15px] font-bold tracking-tight text-foreground">Tax RAG Assistant</h1>
-              <span className="text-[10px] text-muted-foreground font-medium">Verified sources only</span>
+              <h1 className="text-lg font-bold tracking-tight text-foreground">Tax RAG Assistant</h1>
+              <span className="text-[11px] text-muted-foreground font-medium">Verified sources only</span>
             </div>
           </div>
         </div>
