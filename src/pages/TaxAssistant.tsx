@@ -70,13 +70,13 @@ const TaxAssistant = () => {
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto chat-scroll">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-6 space-y-5">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 space-y-3">
           {/* Welcome */}
           {showWelcome && (
-            <div className="text-center py-10 animate-float-in">
-              <img src={fbrLogo} alt="FBR Logo" className="w-14 h-14 rounded-2xl object-cover mx-auto mb-5 shadow-lg" />
-              <h2 className="text-xl font-bold text-foreground mb-2">How can I help with your taxes?</h2>
-              <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">
+            <div className="text-center py-6 animate-float-in">
+              <img src={fbrLogo} alt="FBR Logo" className="w-12 h-12 rounded-2xl object-cover mx-auto mb-3 shadow-lg" />
+              <h2 className="text-lg font-bold text-foreground mb-1">How can I help with your taxes?</h2>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto mb-5">
                 Every response is retrieved from verified research - no assumptions, no AI-generated guesses.
               </p>
               <div className="grid grid-cols-2 gap-2 max-w-lg mx-auto">
