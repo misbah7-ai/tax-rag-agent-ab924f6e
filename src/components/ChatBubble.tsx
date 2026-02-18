@@ -1,5 +1,5 @@
 import { ChatMessage } from "@/hooks/useChat";
-import { Copy, Download, Check, FileText, ExternalLink, Bot, User } from "lucide-react";
+import { Copy, Download, Check, FileText, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 
@@ -17,7 +17,6 @@ const ChatBubble = ({ message }: Props) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // fallback
       const textarea = document.createElement("textarea");
       textarea.value = message.text;
       document.body.appendChild(textarea);
@@ -40,21 +39,10 @@ const ChatBubble = ({ message }: Props) => {
   };
 
   return (
-    <div className={`flex items-start gap-2.5 animate-float-in ${isUser ? "flex-row-reverse" : ""}`}>
-      {/* Avatar */}
-      <div
-        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-1 ${
-          isUser
-            ? "bg-primary text-primary-foreground"
-            : "bg-gradient-to-br from-accent to-[hsl(var(--gold-glow))] text-accent-foreground"
-        }`}
-      >
-        {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-      </div>
-
-      <div className={`max-w-[80%] space-y-1 flex flex-col ${isUser ? "items-end" : "items-start"}`}>
+    <div className={`flex items-start gap-2 animate-float-in ${isUser ? "flex-row-reverse" : ""}`}>
+      <div className={`max-w-[85%] space-y-1 flex flex-col ${isUser ? "items-end" : "items-start"}`}>
         {/* Label */}
-        <span className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
+        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider px-1">
           {isUser ? "You" : "Tax Assistant"}
         </span>
 
@@ -62,8 +50,8 @@ const ChatBubble = ({ message }: Props) => {
         <div
           className={`px-4 py-3 text-[14px] leading-relaxed ${
             isUser
-              ? "bg-primary text-primary-foreground rounded-2xl rounded-br-md"
-              : "bg-card text-card-foreground rounded-2xl rounded-bl-md border border-border/60"
+              ? "bg-primary text-primary-foreground rounded-lg rounded-br-sm"
+              : "bg-card text-card-foreground rounded-lg rounded-bl-sm border border-border"
           }`}
         >
           {isUser ? (
@@ -77,10 +65,10 @@ const ChatBubble = ({ message }: Props) => {
 
         {/* Action buttons for assistant messages */}
         {!isUser && (
-          <div className="flex items-center gap-1 px-1">
+          <div className="flex items-center gap-0.5 px-1">
             <button
               onClick={handleCopy}
-              className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+              className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded hover:bg-primary/5"
               title="Copy response"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-accent" /> : <Copy className="w-3.5 h-3.5" />}
@@ -88,7 +76,7 @@ const ChatBubble = ({ message }: Props) => {
             </button>
             <button
               onClick={handleExport}
-              className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-muted"
+              className="flex items-center gap-1 text-[11px] font-medium text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded hover:bg-primary/5"
               title="Download response"
             >
               <Download className="w-3.5 h-3.5" />
@@ -99,7 +87,7 @@ const ChatBubble = ({ message }: Props) => {
 
         {/* References */}
         {message.references && message.references.length > 0 && (
-          <div className="bg-[hsl(var(--blue-soft))] rounded-xl p-3 space-y-1.5 w-full border border-[hsl(var(--blue-accent)/0.15)]">
+          <div className="bg-[hsl(var(--blue-soft))] rounded-lg p-3 space-y-1.5 w-full border border-primary/10">
             <p className="text-[11px] font-bold text-muted-foreground flex items-center gap-1.5 uppercase tracking-wider">
               <FileText className="w-3.5 h-3.5" />
               Sources
@@ -111,7 +99,7 @@ const ChatBubble = ({ message }: Props) => {
                     href={ref.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 hover:text-accent transition-colors underline underline-offset-2"
+                    className="flex items-center gap-1 hover:text-primary transition-colors underline underline-offset-2"
                   >
                     {ref.title}
                     <ExternalLink className="w-3 h-3" />
