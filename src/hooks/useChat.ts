@@ -56,11 +56,12 @@ export function useChat() {
       const botMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        text:
+        text: (
           data.text ||
           data.message ||
           data.response ||
-          "Our research workflow did not return a result for this query. This means the information was not found in our verified knowledge base. Please rephrase your question or consult a tax professional for further assistance.",
+          "Our research workflow did not return a result for this query. This means the information was not found in our verified knowledge base. Please rephrase your question or consult a tax professional for further assistance."
+        ).replace(/[—–]/g, "-"),
         speechUrl: data.speech || data.audio || undefined,
         references: data.references || data.sources || undefined,
         timestamp: new Date(),

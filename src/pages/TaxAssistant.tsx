@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Sparkles, Shield, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
+import fbrLogo from "@/assets/fbr-logo.jfif";
 import ChatBubble from "@/components/ChatBubble";
 import TypingIndicator from "@/components/TypingIndicator";
 
@@ -58,15 +59,10 @@ const TaxAssistant = () => {
       <header className="shrink-0 border-b border-border/60 bg-card/90 glass sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-              <Sparkles className="w-4.5 h-4.5 text-accent" />
-            </div>
+            <img src={fbrLogo} alt="FBR Logo" className="w-9 h-9 rounded-lg object-cover" />
             <div>
               <h1 className="text-[15px] font-bold tracking-tight text-foreground">Tax RAG Assistant</h1>
-              <div className="flex items-center gap-1.5">
-                <Shield className="w-3 h-3 text-accent" />
-                <span className="text-[10px] text-muted-foreground font-medium">Verified sources only</span>
-              </div>
+              <span className="text-[10px] text-muted-foreground font-medium">Verified sources only</span>
             </div>
           </div>
         </div>
@@ -78,12 +74,10 @@ const TaxAssistant = () => {
           {/* Welcome */}
           {showWelcome && (
             <div className="text-center py-10 animate-float-in">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-5 shadow-lg">
-                <Sparkles className="w-7 h-7 text-accent" />
-              </div>
+              <img src={fbrLogo} alt="FBR Logo" className="w-14 h-14 rounded-2xl object-cover mx-auto mb-5 shadow-lg" />
               <h2 className="text-xl font-bold text-foreground mb-2">How can I help with your taxes?</h2>
               <p className="text-sm text-muted-foreground max-w-md mx-auto mb-8">
-                Every response is retrieved from verified research — no assumptions, no AI-generated guesses.
+                Every response is retrieved from verified research - no assumptions, no AI-generated guesses.
               </p>
               <div className="grid grid-cols-2 gap-2 max-w-lg mx-auto">
                 {QUICK_PROMPTS.map((prompt) => (
