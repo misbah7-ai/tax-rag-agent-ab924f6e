@@ -1,15 +1,45 @@
 import { useState, useRef, useEffect } from "react";
-import { ArrowUp, Shield } from "lucide-react";
+import { ArrowUp, Shield, ChevronRight } from "lucide-react";
 import { useChat } from "@/hooks/useChat";
 import fbrLogo from "@/assets/fbr-logo.jfif";
 import ChatBubble from "@/components/ChatBubble";
 import TypingIndicator from "@/components/TypingIndicator";
 
-const QUICK_PROMPTS = [
-  "What deductions can I claim?",
-  "How do I file a tax return?",
-  "Explain the latest tax brackets",
-  "Capital gains tax rules",
+const PROMPT_CATEGORIES = [
+  {
+    label: "Budget 2025–2026",
+    prompts: [
+      "Key tax changes in Budget 2025–2026?",
+      "How does Budget 2025–2026 affect salaried individuals?",
+      "Corporate tax changes in 2025–2026?",
+      "FBR revenue target for 2025–2026?",
+      "New tax exemptions in Budget 2025–2026?",
+      "Projected fiscal deficit for 2025–2026?",
+    ],
+  },
+  {
+    label: "Income Tax",
+    prompts: [
+      "What deductions can I claim?",
+      "How do I file a tax return?",
+      "Explain the latest tax brackets",
+      "Penalties or compliance changes introduced?",
+    ],
+  },
+  {
+    label: "Sales Tax",
+    prompts: [
+      "New sales tax adjustments in 2025–2026?",
+      "Sales tax registration requirements?",
+    ],
+  },
+  {
+    label: "Customs & Duties",
+    prompts: [
+      "Customs duty changes proposed?",
+      "Export incentives in Budget 2025–2026?",
+    ],
+  },
 ];
 
 const TaxAssistant = () => {
@@ -50,6 +80,8 @@ const TaxAssistant = () => {
     sendMessage(prompt);
   };
 
+  const [activeCategory, setActiveCategory] = useState(0);
+
   const showWelcome = messages.length <= 1;
 
   return (
@@ -73,7 +105,6 @@ const TaxAssistant = () => {
             <span>Verified Sources Only</span>
           </div>
         </div>
-        {/* Accent bar */}
         <div className="h-1 bg-accent" />
       </header>
 
@@ -92,18 +123,37 @@ const TaxAssistant = () => {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  Your AI-powered assistant for federal tax guidance, explanations, and insights. Ask your tax question below and our system will provide formal, concise, and reliable responses with options to copy, download, or save your answer for future reference.
+                  Your AI-powered assistant for federal tax guidance, explanations, and insights. Ask your tax question below and our system will provide formal, concise, and reliable responses.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                {QUICK_PROMPTS.map((prompt) => (
+              {/* Category Tabs */}
+              <div className="flex gap-1.5 mb-3 overflow-x-auto pb-1">
+                {PROMPT_CATEGORIES.map((cat, idx) => (
+                  <button
+                    key={cat.label}
+                    onClick={() => setActiveCategory(idx)}
+                    className={`px-3 py-1.5 text-[12px] font-semibold rounded-md border whitespace-nowrap transition-colors ${
+                      activeCategory === idx
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card text-muted-foreground border-border hover:border-primary/40 hover:text-foreground"
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Prompt Buttons */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {PROMPT_CATEGORIES[activeCategory].prompts.map((prompt) => (
                   <button
                     key={prompt}
                     onClick={() => handleQuickPrompt(prompt)}
-                    className="px-3 py-2.5 text-[13px] font-medium rounded-lg border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors text-left"
+                    className="group flex items-center gap-2 px-3 py-2.5 text-[13px] font-medium rounded-lg border border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/5 transition-colors text-left"
                   >
-                    {prompt}
+                    <ChevronRight className="w-3.5 h-3.5 text-primary shrink-0 opacity-60 group-hover:opacity-100 transition-opacity" />
+                    <span>{prompt}</span>
                   </button>
                 ))}
               </div>
